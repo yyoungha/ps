@@ -32,7 +32,8 @@ Flow network는 특별한 두 정점 **source** s와 **sink** t을 갖는다. fl
 
 ### antiparallel 간선을 포함한 문제 모델링
 우리는 flow network의 정의에서 간선 *(u, v)* ∈ *E* 라면 반대 방향의 간선 *(v, u)* 는 존재하지 않는다고 했다. 우리는 두 간선 *(u, v)*와 *(v, u)*를 반평행(antiparallel)이라고 한다. 즉 우리가 이러한 간선을 가진 문제를 flow network로 모델링하기 위해서는 이와 동치의 반평행 간선이 없는 네트워크로 변환시켜야 한다.  
-변환시키는 방법은 반평행 간선 중 하나 *(v, u)* 를 골라 하나의 정점을 추가함으로써 이를 두 간선 *(v, w)*, *(w, u)* 로 나누는 것이다. 그 후 이 두 간선의 용량을 기존 간선이었던 *(v, w)*의 용량으로 설정한다. 이렇게 하면 우리는 반평행 간선이 없는 네트워크를 얻을 수 있다.
+
+변환 방법으로는 문제를 발생시킨 반평행 간선 중 하나 *(v, u)* 를 골라 하나의 정점을 추가함으로써 이를 두 간선 *(v, w)*, *(w, u)* 로 나누는 것이다. 그 후 이 두 간선의 용량을 기존 간선이었던 (*v, w*)의 용량으로 설정한다. 이렇게 하면 우리는 반평행 간선이 없는 네트워크를 얻을 수 있다.
 
 ### 만약 Source와 Sink가 여러개라면?
 Maxflow 문제에서 source와 sink 는 여러개가 될 수 있다. 우리는 이 문제를 두개의 정점 supersource와 supersink 및 간선을 추가하여 간단히 축소시킬 수 있다. 여러개의 source s<sub>i</sub>에 대해 supersource s에서 시작하는 간선 (s, s<sub>i</sub>) 을 추가하고 용량을 무한대로 설정한다. 마찬가지로 sink에 대해서도 supersink t에 대해 t로 향하는 간선 (t<sub>i</sub>, t) 을 추가하고 용량을 무한대로 설정한다. 
@@ -69,10 +70,9 @@ G<sub>ƒ</sub> = (V, E<sub>ƒ</sub>) where E<sub>ƒ</sub> = {(u, v) ∈ V × V :
 </p>
 
 Residual network의 flow는 우리에게 원본 flow network에서 어떤 flow를 추가할지에 대한 로드맵을 제공해준다. 만약 ƒ가 G의 flow이고 ƒ'이 대응하는 G<sub>ƒ</sub>의 flow라면 ƒ↑ƒ'를 flow의  **augmentation**이라 하고 다음을 만족하는 함수 V × V → R 를 말한다. 
-<p align="center">
-(ƒ↑ƒ')(<i>u,v</i>) = ƒ(<i>u,v</i>) + ƒ'(<i>u,v</i>) - ƒ'(<i>v,u</i>) if (<i>u,v</i>) ∈ E  
 
-0 otherwise
+<p align="center">
+(ƒ↑ƒ')(<i>u,v</i>) = ƒ(<i>u,v</i>) + ƒ'(<i>u,v</i>) - ƒ'(<i>v,u</i>) if (<i>u,v</i>) ∈ E, 0 otherwise
 </p>
 
 이러한 정의를 이해하기 위해 residual network의 정의를 생각해보자. 우리는 간선 (*u, v*)의 flow를 ƒ'(*u,v*)만큼 증가시키고 ƒ'(*v,u*)만큼 감소시켰다. 왜냐하면 residual network에서 반대방향으로 flow를 흘려보내는 것은 original network에서의 flow 감소를 나타내기 때문이다. 이렇게 residual network에서 반대방향으로 flow를 흘려보내는 것을 **cancellation** 이라고 한다.
