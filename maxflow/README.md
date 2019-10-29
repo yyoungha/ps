@@ -30,21 +30,22 @@ Flow network는 특별한 두 정점 **source** s와 **sink** t을 갖는다. fl
 
 간단히 두가지 flow의 속성에 대해 되짚어보자. Capacity constraint는 한 정점에서 다른 정점으로의 flow는 반드시 음이 아닌 수이며 주어진 용량을 초과해서는 안된다. Flow conversion 특성은 source나 sink를 제외한 한 정점으로 들어오는 flow 합은 그 정점에서 나가는 flow 합과 같아야 한다. 간단히 말해, flow in equals flow out.
 
-### antiparallel 간선을 포함한 문제 모델링
+#### antiparallel 간선을 포함한 문제 모델링
 우리는 flow network의 정의에서 간선 *(u, v)* ∈ *E* 라면 반대 방향의 간선 *(v, u)* 는 존재하지 않는다고 했다. 우리는 두 간선 *(u, v)*와 *(v, u)*를 반평행(antiparallel)이라고 한다. 즉 우리가 이러한 간선을 가진 문제를 flow network로 모델링하기 위해서는 이와 동치의 반평행 간선이 없는 네트워크로 변환시켜야 한다.  
 
 변환 방법으로는 문제를 발생시킨 반평행 간선 중 하나 *(v, u)* 를 골라 하나의 정점을 추가함으로써 이를 두 간선 *(v, w)*, *(w, u)* 로 나누는 것이다. 그 후 이 두 간선의 용량을 기존 간선이었던 (*v, w*)의 용량으로 설정한다. 이렇게 하면 우리는 반평행 간선이 없는 네트워크를 얻을 수 있다.
 
-### 만약 Source와 Sink가 여러개라면?
+#### 만약 Source와 Sink가 여러개라면?
 Maxflow 문제에서 source와 sink 는 여러개가 될 수 있다. 우리는 이 문제를 두개의 정점 supersource와 supersink 및 간선을 추가하여 간단히 축소시킬 수 있다. 여러개의 source s<sub>i</sub>에 대해 supersource s에서 시작하는 간선 (s, s<sub>i</sub>) 을 추가하고 용량을 무한대로 설정한다. 마찬가지로 sink에 대해서도 supersink t에 대해 t로 향하는 간선 (t<sub>i</sub>, t) 을 추가하고 용량을 무한대로 설정한다. 
 
 # Ford-Fulkerson method
-Algorithm이 아니라 Method라고 부르는 이유는 몇가지 구현 방법에 따라 실행 시간이 달라지는 여러 방법을 포괄하고 있기 때문이다. Ford-Fulkerson method는 다른 flow algorithm과 구분되는 세가지 아이디어가 핵심이 된다.
+Algorithm이 아니라 Method라고 부르는데에는 이유가 있다. 몇가지 구현 방법에 따라 실행 시간이 달라지는 여러가지 방법을 포함하고 있기 때문이다. Ford-Fulkerson method는 다른 flow algorithm과 구분되는 세가지 아이디어가 핵심이 된다.
+
 1. Residual networks
 2. Augmenting paths
 3. Cuts  
 
-Fork-Fulkerson method는 flow의 value를 반복해서 증가시킨다. 처음에는 모든 *u, v* ∈ *V* 에 대하여 ƒ(*u, v*) = 0, 즉 그래프 G의 flow value를 0으로 두고 시작한다. 매 반복마다 "residual network" G<sub>ƒ</sub>와 연관된 "augmenting path"를 찾음으로써 G의 flow value를 증가시킨다. augmenting path의 간선들을 알고 있으면, 우리는 쉽게 G의 특정한 간선을 식별하여 flow를 바꿀 수 있다.
+Fork-Fulkerson method는 flow의 value를 반복해서 증가시킨다. 처음에는 모든 *u, v* ∈ *V* 에 대하여 ƒ(*u, v*) = 0, 즉 그래프 G의 flow value를 0으로 두고 시작한다. 매 반복마다 "residual network" G<sub>ƒ</sub>에서 "augmenting path"를 찾음으로써 G의 flow value를 증가시킨다. G<sub>ƒ</sub>의 augmenting path의 간선들을 알고 있으면, 우리는 쉽게 G의 특정한 간선을 식별하여 flow를 바꿀 수 있다.
 
 ## Residual Network
 Residual network G<sub>ƒ</sub> 는 G의 간선의 flow를 어떻게 바꿀지를 나타내는 용량을 갖는 간선으로 구성되어 있다. flow network의 모든 간선은 (해당 간선의 용량) - (해당 간선의 flow) 만큼의 추가적인 flow를 허용할 수 있다. 만약 이 값이 양수이면 해당 간선을 G<sub>ƒ</sub>에 추가한다. 이 간선의 용량을 residual capacity(c<sub>ƒ</sub>)라 하고, 그 값은 c<sub>ƒ</sub>(*u, v*) = c(*u, v*) - ƒ(*u, v*) 이다. flow network G의 간선 중에서 추가 flow를 허용하는 간선은 오직 G<sub>ƒ</sub>에 포함된 간선 뿐이다. flow가 용량과 같은 간선은 c<sub>ƒ</sub>(*u, v*) = 0 이므로 G<sub>ƒ</sub>에 포함되지 않는다.  
@@ -61,7 +62,7 @@ Flow network G의 간선에 대해 *(u, v)* ∈ *E* 라면 반대 방향의 간�
 이제 **residual network**를 정의해보자.
 flow network G = (*V, E*)와 그 flow ƒ가 주어졌을 때, G의 residual network induced by ƒ, G<sub>ƒ</sub> 는 다음과 같다.
 <p align="center">
-G<sub>ƒ</sub> = (V, E<sub>ƒ</sub>) where E<sub>ƒ</sub> = {(u, v) ∈ V × V : c<sub>ƒ</sub>(u, v) > 0}
+<a href="https://www.codecogs.com/eqnedit.php?latex=G_{f}=(V,&space;E_{f}),&space;E_{f}&space;=&space;\begin{Bmatrix}&space;(u,&space;v)&space;\in&space;V&space;\times&space;V&space;:&space;c_{f}(u,&space;v)&space;>&space;0&space;\end{Bmatrix}" target="_blank"><img src="https://latex.codecogs.com/png.latex?G_{f}=(V,&space;E_{f}),&space;E_{f}&space;=&space;\begin{Bmatrix}&space;(u,&space;v)&space;\in&space;V&space;\times&space;V&space;:&space;c_{f}(u,&space;v)&space;>&space;0&space;\end{Bmatrix}" title="G_{f}=(V, E_{f}), E_{f} = \begin{Bmatrix} (u, v) \in V \times V : c_{f}(u, v) > 0 \end{Bmatrix}" /></a>
 </p>
 
 위에서 정의한 것 처럼, residual network의 각 간선 **residual edge** 는 0보다 큰 flow만 허용할 수 있다. residual network의 간선은 flow network G의 반대방향 간선도 가질 수 있으므로  
@@ -77,15 +78,15 @@ Residual network의 flow는 우리에게 원본 flow network에서 어떤 flow�
 
 이러한 정의를 이해하기 위해 residual network의 정의를 생각해보자. 우리는 간선 (*u, v*)의 flow를 ƒ'(*u,v*)만큼 증가시키고 ƒ'(*v,u*)만큼 감소시켰다. 왜냐하면 residual network에서 반대방향으로 flow를 흘려보내는 것은 original network에서의 flow 감소를 나타내기 때문이다. 이렇게 residual network에서 반대방향으로 flow를 흘려보내는 것을 **cancellation** 이라고 한다.
 
-## Augmenting paths
+### Augmenting paths
 Flow network G = (*V, E*)와 flow ƒ가 주어졌을 때, **augmenting path** p는 residual network G<sub>ƒ</sub>의 s에서 t로가는 단순 경로(simple path)이다. residual network의 정의에 의해 우리는 capacity constraint를 준수하면서 augmenting path의 한 간선 (*u, v*)의 flow를 최대 c<sub>ƒ</sub>(*u, v*) 까지 증가시킬 수 있다.
 
 augmenting path p에서 우리가 증가시킬 수 있는 flow의 최대 용량을 p의 **residual capacity**라고 하며, 다음과 같이 표시할 수 있다.
 <p align="center">
-c<sub>ƒ</sub>(p) = min {c<sub>ƒ</sub>(u, v) : (u, v) is on p}
+<a href="https://www.codecogs.com/eqnedit.php?latex=c_{f}(p)&space;=&space;min(c_{f}(u,&space;v)&space;:&space;(u,&space;v)\,is\,on\,p)" target="_blank"><img src="https://latex.codecogs.com/png.latex?c_{f}(p)&space;=&space;min(c_{f}(u,&space;v)&space;:&space;(u,&space;v)\,is\,on\,p)" title="c_{f}(p) = min(c_{f}(u, v) : (u, v)\,is\,on\,p)" /></a>
 </p>
 
-## Cuts of flow networks
+### Cuts of flow networks
 Ford-Fulkerson method는 maximum flow를 찾을 때까지 반복해서 augmenting path를 따라 flow를 증가시킨다. maximum flow를 찾았다는 것을 어떻게 알 수 있을까? max-flow min-cut theorem에 의하면 residual network가 더이상 augmenting path를 가지지 않을 때 flow가 maximum이라고 한다. 이를 살펴보기에 앞서, 먼저 flow network에서 cut이 무엇인지에 대해 알아보자.  
 
 Flow network G = (*V, E*)의 **cut** (*S, T*)은  *s* ∈ *S* 이고 *t* ∈ *T* 를 만족하는 *V*의 분할 *S*와 *T*(*T* = *V* - *S*)를 말한다. 만약 ƒ가 flow라면 **net flow** ƒ(*S, T*) across the cut(*S, T*)는 다음과 같이 정의된다.
@@ -115,21 +116,22 @@ Flow network G = (*V, E*)의 **cut** (*S, T*)은  *s* ∈ *S* 이고 *t* ∈ *T*
 
 ## Ford-Fulkerson algorithm
 Ford-Fulkerson method에서 매번 반복할 때 마다 flow ƒ를 조정하기 위해 *몇가지* augmenting path p를 찾는다. ƒ를 (ƒ↑ƒ<sub>p</sub>)로 대체하여, 새로운 flow 값 |ƒ|+|ƒ<sub>p</sub>|을 얻는다.  Ford-Fulkerson method의 의사코드는 아래와 같다. 이 알고리즘은 주어진 flow network G의 maximum flow를 계산한다. 
+
 ````
 FORD-FULKERSON(G = (V, E), s, t)
 1  for each edge (u, v) ∈ E
 2    (u, v).ƒ = 0
 3  while(∃ a path p from s to t in residual network)
-4    c<sub>ƒ</sub>(p) = min(c<sub>ƒ</sub>(u, v) : (u, v) is in p)
+4    cƒ(p) = min(cƒ(u, v) : (u, v) is in p)
 5    for each edge (u, v) in p
 6      if( (u, v) ∈ E )
-7        (u, v).ƒ = (u, v).ƒ + c<sub>ƒ</sub>(p)
+7        (u, v).ƒ = (u, v).ƒ + cƒ(p)
 8      else 
-9        (u, v).ƒ = (u, v).ƒ - c<sub>ƒ</sub>(p)
+9        (u, v).ƒ = (u, v).ƒ - cƒ(p)
 ````
 
-## Ford-Fulkerson algorithm 분석
+### Ford-Fulkerson algorithm 분석
 Ford-Fulkerson 알고리즘의 실행 시간은 `line 3`에서 augmenting path p를 어떻게 찾느냐에 따라 달라진다. 이 경로를 잘못 고른다면 알고리즘은 무한 루프에 빠질 수도 있다. 만약 우리가 BFS를 이용하여 augmenting path를 찾는다면, 알고리즘은 Polynomial 시간 내에 끝난다.
 
 # Reference
-- Introduction to Algorithm
+- <a href="https://www.amazon.com/Introduction-Algorithms-3rd-MIT-Press/dp/0262033844"> Introduction to Algorithm </a>
