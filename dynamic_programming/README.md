@@ -11,7 +11,7 @@ Dynamic programming 알고리즘을 사용할 때, 다음과 같은 단계를 �
 3. (주로 bottom-up 방식으로) Optimal solution을 계산한다.
 4. (Optional) 계산된 정보를 바탕으로 Optimal solution의 구조를 찾아낸다.
 
-## 예제) 막대 자르기
+### 예제) 막대 자르기
 막대의 총 길이 n과 막대의 길이별 가격 p<sub>i</sub>가 주어졌을 때, 막대를 어떻게 자르는 것이 가격을 최대로 할 수 있는지를 찾는 문제이다. 막대를 자르지 않은 가격이 최대일 수도 있으며, 막대를 자르는데에는 비용이 들지 않는다고 가정한다.  
 만약 optimal solution으로 자르고 난 후의 각 막대 길이를 i<sub>k</sub>라고 할 때, *n = i<sub>1</sub> + i<sub>2</sub> + ... + i<sub>k</sub> ( 1 ≤ k ≤ n )* 이고, 각 막대의 가격의 합 *r<sub>n</sub> = p<sub>i<sub>1</sub></sub> + p<sub>i<sub>2</sub></sub> + ... + p<sub>i<sub>k</sub></sub>* 은 최대가 된다. 
 
@@ -27,7 +27,7 @@ Dynamic programming 알고리즘을 사용할 때, 다음과 같은 단계를 �
 >r<sub>4</sub> = 10, 길이 4 = 2 + 2  
 >r<sub>5</sub> = 13, 길이 5 = 2 + 3  
 >r<sub>6</sub> = 17, 길이 6 (자르지 않음)    
->r<sub>7</sub> = 18, 길이 7 = 1 + 6 or 2 + 2 + 3  
+>r<sub>7</sub> = 18, 길이 7 = 1 + 6 혹은 2 + 2 + 3  
 >r<sub>8</sub> = 22, 길이 8 = 2 + 6  
 >r<sub>9</sub> = 25, 길이 9 = 3 + 6  
 >r<sub>10</sub> = 30, 길이 10 = 10 (자르지 않음)
@@ -36,9 +36,10 @@ Dynamic programming 알고리즘을 사용할 때, 다음과 같은 단계를 �
 <p align="center">
 r<sub>n</sub> = max(p<sub>n</sub>, r<sub>1</sub> + r<sub>n-1</sub>, r<sub>2</sub> + r<sub>n-2</sub>, ... , r<sub>n-1</sub> + r<sub>1</sub>)
 </p>
-여기서 p<sub>n</sub>은 길이가 n인 막대를 자르지 않고 그대로 갖고 있을 때의 가격을 말한다. 다른 n - 1개의 식은 막대를 길이 i와 n - i로 잘랐을 때의 최대 이익에 대응한다. 각 막대 r<sub>i</sub>와 r<sub>n-i</sub>를 계속  
 
-어떤 i가 이익을 최대로 할지 아직 모르기 때문에, 모든 경우의 수를 다 살펴보아야 한다. 길이가 n일때의 최적 해를 알기 위해, 같은 문제이지만 그보다 길이가 작은 두 경우(i, n - i)의 최적 해를 알아야 한다. 이처럼 문제의 optimal solution이 그와 연관된 subproblem의 optimal solution을 포함하고 있는 경우, 이러한 문제를 최적의 부분 구조(***optimal substructure***)를 가지고 있다고 한다.
+여기서 p<sub>n</sub>은 길이가 n인 막대를 자르지 않고 그대로 갖고 있을 때의 가격을 말한다. 다른 n - 1개의 식은 막대를 길이 i와 n - i로 잘랐을 때의 최대 이익에 대응한다. 각 막대 r<sub>i</sub>와 r<sub>n-i</sub>를 계속 optimal solution으로 잘라나가면 길이 n의 optimal solution을 구할 수 있다. 
+
+그러나 아직 어떤 i가 이익을 최대로 할지 모르기 때문에, 모든 경우의 수를 다 살펴보아야 한다. 길이가 n일때의 최적 해를 알기 위해, 같은 문제이지만 그보다 길이가 작은 두 경우(i, n - i)의 최적 해를 알아야 한다. 이처럼 문제의 optimal solution이 그와 연관된 subproblem의 optimal solution을 포함하고 있는 경우, 이러한 문제를 최적의 부분 구조(***optimal substructure***)를 가지고 있다고 한다.
 
 문제를 더 간단히 해보자. 막대를 길이 i와 n - i로 잘랐을 때, 길이 i인 부분은 자르지 않고 길이 n - i인 부분만 계속 자른다면, 다음과 같이 간단한 식으로 모든 경우의 수를 다 따져볼 수 있다.
 <p align="center">
@@ -108,4 +109,10 @@ int CUT_ROD(int *p, int n)
  두 방식 모두 같은 시간복잡도를 가지지만, 2번의 경우 함수 재귀호출의 오버헤드가 없기 때문에 1번 방식과 비교해서 조금 더 나은 성능을 보인다.
 
  #### Subproblem graph
- Dynamic programming 문제를 생각할 때, 어떻게 각 부분 문제가 하위 문제와 서로 연관이 되어있는지에 대한 이해가 필요하다. 이를 쉽게 하기 위해 Subproblem graph를 활용할 수 있다. 이 그래프는 방향 그래프로, 각 정점은 부분 문제를 나타내고 부분 문제 v를 푸는데 u의 solution이 직접적으로 필요하다면 간선 (u, v)를 가진다.
+ Dynamic programming 문제를 생각할 때, 어떻게 각 부분 문제가 하위 문제와 서로 연관이 되어있는지에 대한 이해가 필요하다. 이를 쉽게 하기 위해 subproblem graph를 활용할 수 있다. 이 그래프는 방향 그래프로, 각 정점은 부분 문제를 나타내고 부분 문제 v를 푸는데 u의 solution이 직접적으로 필요하다면 간선 (u, v)를 가진다. 막대 자르기 문제에서 n = 4일 때의 subproblem graph는 아래와 같다.
+
+ <center>
+<img src ='./img/subproblem_graph.png' />
+</center>  
+
+각 정점의 번호는 각 부분 문제에서 n의 길이를 나타낸다. 방향 간선 (u, v)는 문제 u를 해결하기 위해 부분 문제 v를 해결해야 함을 의미한다. 
