@@ -112,7 +112,7 @@ int CUT_ROD(int *p, int n)
  Dynamic programming 문제를 생각할 때, 어떻게 각 부분 문제가 하위 문제와 서로 연관이 되어있는지에 대한 이해가 필요하다. 이를 쉽게 하기 위해 subproblem graph를 활용할 수 있다. 이 그래프는 방향 그래프로, 각 정점은 부분 문제를 나타내고 부분 문제 v를 푸는데 u의 solution이 직접적으로 필요하다면 간선 (u, v)를 가진다. 막대 자르기 문제에서 n = 4일 때의 subproblem graph는 아래와 같다.
 
  <center>
-<img src ='./img/subproblem_graph.png' />
+<img src ='./img/subproblem_graph.PNG' />
 </center>  
 
 각 정점의 번호는 각 부분 문제에서 n의 길이를 나타낸다. 방향 간선 (u, v)는 문제 u를 해결하기 위해 부분 문제 v를 해결해야 함을 의미한다. 
