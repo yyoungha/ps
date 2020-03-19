@@ -160,5 +160,5 @@ Ford-Fulkerson 알고리즘의 실행 시간은 `line 3`에서 augmenting path p
 
 
 
-# Reference
+# References
 - <a href="https://www.amazon.com/Introduction-Algorithms-3rd-MIT-Press/dp/0262033844"> Introduction to Algorithm </a>
